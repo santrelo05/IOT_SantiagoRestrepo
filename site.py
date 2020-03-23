@@ -61,17 +61,13 @@ def sensor_send():
     return "ok",201
 
 @app.route('/creardb')
-def borrardb():
+def creardb():
     con = sqlite3.connect(db_path)
     cur = con.cursor()
     cur.execute("DROP TABLE IF EXISTS temperatura")
-    cur.execute("CREATE TABLE data (idsensor NUMERIC, timestamp DATETIME, temperatura NUMERIC, lat NUMERIC, lon NUMERIC)")
-    con.commit()
-    con.close()
-    con = sqlite3.connect(db_path)
-    cur = con.cursor()
+    cur.execute("CREATE TABLE temperatura (idsensor NUMERIC, timestamp DATETIME, temperatura NUMERIC, lat NUMERIC, lon NUMERIC)")
     cur.execute("DROP TABLE IF EXISTS humedad")
-    cur.execute("CREATE TABLE data (idsensor NUMERIC, timestamp DATETIME, humedad NUMERIC, lat NUMERIC, lon NUMERIC)")
+    cur.execute("CREATE TABLE humedad (idsensor NUMERIC, timestamp DATETIME, humedad NUMERIC, lat NUMERIC, lon NUMERIC)")
     con.commit()
     con.close()
     return "crear base de datos",201
