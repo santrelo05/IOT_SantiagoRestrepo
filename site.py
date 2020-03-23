@@ -81,12 +81,34 @@ def send_temperatura():
     print(a.split(";")[1].split("=")[1])
     print(a.split(";")[2].split("=")[1])
     print(a.split(";")[3].split("=")[1])
-    """con = sqlite3.connect(db_path)
+    con = sqlite3.connect(db_path)
     cur = con.cursor()
     cur.execute("INSERT INTO temperatura VALUES(" + a.split(";")[0] + "," + "datetime('now')," + a.split(";")[1].split("=")[1] + "," + a.split(";")[3].split("=")[1] + "," + a.split(";")[2].split("=")[1] + ")")
     con.commit()
-    con.close()"""
+    con.close()
     return "ok",201
+
+@app.route("/temperatura")
+def captura():
+    sensorID = []
+    sensorTime = []
+    sensorTemp = []
+    sensorLat = []
+    sensorLon = []
+    con = sqlite3.connect(db_path)
+    curs = con.cursor()
+    for fila in curs.execute("SELECT * FROM temperatura"):
+        sensorID.append(fila[0])
+        sensorTime.append(fila[1])
+        sensorTemp.append(fila[2])
+        sensorLat.append(fila[3])
+        sensorLon.append(fila[4])
+    con.close()
+    print(sensorID +" "+ sensorTime+" "+sensorTemp+" "+sensorLat+" "+sensorLon)
+    leyenda = 'Temperatura sensor'
+    etiquetas = sensorTime
+    valores = sensorTemp
+    return sensorID +" "+ sensorTime+" "+sensorTemp+" "+sensorLat+" "+sensorLon,201
 
 
 if __name__ == '__main__':
