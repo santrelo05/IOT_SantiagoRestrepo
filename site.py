@@ -89,7 +89,7 @@ def send_temperatura():
     return "ok",201
 
 @app.route("/temperatura")
-def captura():
+def printempera():
     sensorID = []
     sensorTime = []
     sensorTemp = []
