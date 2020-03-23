@@ -10,55 +10,6 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     return render_template('index.html')
-@app.route('/registro')
-def registro():
-    return render_template('registro.html')
-@app.route('/borrardb')
-def borrardb():
-    con = sqlite3.connect(db_path)
-    cur = con.cursor()
-    cur.execute("DROP TABLE IF EXISTS data")
-    cur.execute("CREATE TABLE data (idsensor NUMERIC, timestamp DATETIME, temp NUMERIC, lat NUMERIC, lon NUMERIC)")
-    con.commit()
-    con.close()
-    return render_template('index.html')
-@app.route("/visualizacion")
-def captura():
-    sensorID = []
-    sensorTime = []
-    sensorTemp = []
-    sensorLat = []
-    sensorLon = []
-    con = sqlite3.connect(db_path)
-    curs = con.cursor()
-    for fila in curs.execute("SELECT * FROM data"):
-        sensorID.append(fila[0])
-        sensorTime.append(fila[1])
-        sensorTemp.append(fila[2])
-        sensorLat.append(fila[3])
-        sensorLon.append(fila[4])
-    con.close()
-    print(sensorID)
-    leyenda = 'Temperatura sensor'
-    etiquetas = sensorTime
-    valores = sensorTemp
-    return render_template('chart.html', values=valores, labels=etiquetas, legend=leyenda)
-
-@app.route('/sensor_send_data', methods=['POST'])
-def sensor_send():
-    values = request.data
-    print(values)
-    a=str(request.values.get('id'))
-    print(a.split(";")[0])
-    print(a.split(";")[1].split("=")[1])
-    print(a.split(";")[2].split("=")[1])
-    print(a.split(";")[3].split("=")[1])
-    con = sqlite3.connect(db_path)
-    cur = con.cursor()
-    cur.execute("INSERT INTO data VALUES(" + a.split(";")[0] + "," + "datetime('now')," + a.split(";")[1].split("=")[1] + "," + a.split(";")[3].split("=")[1] + "," + a.split(";")[2].split("=")[1] + ")")
-    con.commit()
-    con.close()
-    return "ok",201
 
 @app.route('/creardb')
 def creardb():
@@ -103,11 +54,48 @@ def printempera():
         sensorLat.append(fila[3])
         sensorLon.append(fila[4])
     con.close()
-    print(sensorID +" "+ sensorTime+" "+sensorTemp+" "+sensorLat+" "+sensorLon)
+    print(sensorID[0] +" "+ sensorTime[0]+" "+sensorTemp[0]+" "+sensorLat[0]+" "+sensorLon[0])
     leyenda = 'Temperatura sensor'
     etiquetas = sensorTime
     valores = sensorTemp
-    return sensorID +" "+ sensorTime+" "+sensorTemp+" "+sensorLat+" "+sensorLon,201
+    return sensorID[0] +" "+ sensorTime[0]+" "+sensorTemp[0]+" "+sensorLat[0]+" "+sensorLon[0],201
+
+@app.route('/send_humedad', methods=['POST'])
+def send_humedad():
+    values = request.data
+    print(values)
+    print(values.split(";")[0])
+    print(values.split(";")[1])
+    print(values.split(";")[2])
+    print(values.split(";")[3])
+    con = sqlite3.connect(db_path)
+    cur = con.cursor()
+    cur.execute("INSERT INTO humedad VALUES(" + values.split(";")[0] + "," + "datetime('now')," + values.split(";")[1] + "," + values.split(";")[2] + "," + values.split(";")[3] + ")")
+    con.commit()
+    con.close()
+    return "ok",201
+
+@app.route("/humedad")
+def prinhumedad():
+    sensorID = []
+    sensorTime = []
+    sensorTemp = []
+    sensorLat = []
+    sensorLon = []
+    con = sqlite3.connect(db_path)
+    curs = con.cursor()
+    for fila in curs.execute("SELECT * FROM humedad"):
+        sensorID.append(fila[0])
+        sensorTime.append(fila[1])
+        sensorTemp.append(fila[2])
+        sensorLat.append(fila[3])
+        sensorLon.append(fila[4])
+    con.close()
+    print(sensorID[0] +" "+ sensorTime[0]+" "+sensorTemp[0]+" "+sensorLat[0]+" "+sensorLon[0])
+    leyenda = 'Temperatura sensor'
+    etiquetas = sensorTime
+    valores = sensorTemp
+    return sensorID[0] +" "+ sensorTime[0]+" "+sensorTemp[0]+" "+sensorLat[0]+" "+sensorLon[0],201
 
 
 if __name__ == '__main__':
