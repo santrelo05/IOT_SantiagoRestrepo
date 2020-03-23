@@ -72,6 +72,22 @@ def creardb():
     con.close()
     return "crear base de datos",201
 
+@app.route('/send_temperatura', methods=['POST'])
+def send_temperatura():
+    values = request.data
+    print(values)
+    a=str(request.values.get('id'))
+    print(a.split(";")[0])
+    print(a.split(";")[1].split("=")[1])
+    print(a.split(";")[2].split("=")[1])
+    print(a.split(";")[3].split("=")[1])
+    """con = sqlite3.connect(db_path)
+    cur = con.cursor()
+    cur.execute("INSERT INTO temperatura VALUES(" + a.split(";")[0] + "," + "datetime('now')," + a.split(";")[1].split("=")[1] + "," + a.split(";")[3].split("=")[1] + "," + a.split(";")[2].split("=")[1] + ")")
+    con.commit()
+    con.close()"""
+    return "ok",201
+
 
 if __name__ == '__main__':
         app.run(debug=True,host='0.0.0.0',port=80)
